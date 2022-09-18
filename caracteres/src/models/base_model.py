@@ -3,6 +3,9 @@ Base Model class
 """
 
 from __future__ import absolute_import
+from keras.optimizers import RMSprop
+from typing import Callable, Dict, Optional, Tuple
+from pathlib import Path
 from __future__ import division
 from __future__ import print_function
 import os
@@ -10,10 +13,6 @@ import errno
 import numpy as np
 np.random.seed(42)
 
-from pathlib import Path
-from typing import Callable, Dict, Optional, Tuple
-from keras.optimizers import RMSprop
-#from tensorflow.keras.optimizers import RMSprop
 
 WEIGHTS_DIR = Path(__file__).parents[2].resolve() / 'models'
 MODEL_DIR = Path(__file__).parents[2].resolve() / 'models'
@@ -21,15 +20,17 @@ MODEL_DIR = Path(__file__).parents[2].resolve() / 'models'
 
 class Model:
     """
-    Base class
+    Clase Base
     """
+
     def __init__(self,
-                 network_fn : Callable,
-                 dataset : type):
-        """Network_fn -> Type of network class and dataset -> Type of dataset class"""
+                 network_fn: Callable,
+                 dataset: type):
+        """Network_fn -> Tipo de clase de red y conjunto de datos -> Tipo de clase de conjunto de datos"""
         self.name = f'{self.__class__.__name__}_{dataset.__name__}_{network_fn.__name__}'
         self.data = dataset()
-        self.network = network_fn(self.data.input_shape, self.data.output_shape)
+        self.network = network_fn(
+            self.data.input_shape, self.data.output_shape)
 
         self.batch_augment_fn: Optional[Callable] = None
         self.batch_format_fn: Optional[Callable] = None
@@ -59,7 +60,7 @@ class Model:
             else:
                 raise
         return str(MODEL_DIR/f'{self.name}_model.h5')
-    
+
     def train_generator(self, dataset, shuff_index, batch_size):
         num_iters = int(np.ceil(dataset['x_train'].shape[0] / batch_size))
         while 1:
@@ -69,54 +70,62 @@ class Model:
                 tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
                 tmp /= 255.0
                 yield tmp, dataset['y_train'][idx]
-    
+
     def valid_generator(self, dataset, batch_size):
         num_iters = int(np.ceil(dataset['x_valid'].shape[0] / batch_size))
         while 1:
             for i in range(num_iters):
-                tmp = dataset['x_valid'][i*batch_size:(i+1)*batch_size].astype('float32')
+                tmp = dataset['x_valid'][i *
+                                         batch_size:(i+1)*batch_size].astype('float32')
                 tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
                 tmp /= 255.0
                 yield tmp, dataset['y_valid'][i*batch_size:(i+1)*batch_size]
 
-    def fit(self, dataset, batch_size : int = 32, epochs : int = 10, callbacks : list = None, lr : float = 1e-3):
+    def fit(self, dataset, batch_size: int = 32, epochs: int = 10, callbacks: list = None, lr: float = 1e-3):
         if callbacks is None:
             callbacks = []
-        #compile the network
-        self.network.compile(loss=self.loss(), optimizer=self.optimizer(lr), metrics=self.metrics())
-        #get the batches from generator
+        # compilar la red
+        self.network.compile(loss=self.loss(), optimizer=self.optimizer(
+            lr), metrics=self.metrics())
+        # obtener los lotes del generador
         shuff_index = np.random.permutation(dataset['x_train'].shape[0])
-        trn_generator = self.train_generator(dataset, shuff_index, batch_size=batch_size)
+        trn_generator = self.train_generator(
+            dataset, shuff_index, batch_size=batch_size)
         val_generator = self.valid_generator(dataset, batch_size=batch_size)
 
-        iters_train = int(np.ceil(dataset['x_train'].shape[0] / float(batch_size)))
-        iters_test = int(np.ceil(dataset['x_valid'].shape[0] / float(batch_size)))
-        print ('Number:', iters_train, iters_test)
-        #train the model using fit_generator
+        iters_train = int(
+            np.ceil(dataset['x_train'].shape[0] / float(batch_size)))
+        iters_test = int(
+            np.ceil(dataset['x_valid'].shape[0] / float(batch_size)))
+        print('Number:', iters_train, iters_test)
+        # entrenar el modelo usando fit_generator
         history = self.network.fit_generator(
-                    generator=trn_generator,
-                    steps_per_epoch=iters_train,
-                    epochs=epochs,
-                    callbacks=callbacks,
-                    validation_data=val_generator,
-                    validation_steps=iters_test,
-                    use_multiprocessing=True,
-                    verbose=2
-                )
+            generator=trn_generator,
+            steps_per_epoch=iters_train,
+            epochs=epochs,
+            callbacks=callbacks,
+            validation_data=val_generator,
+            validation_steps=iters_test,
+            use_multiprocessing=True,
+            verbose=2
+        )
         return history
 
-    def test_generator(self, dataset, batch_size : int):
+    def test_generator(self, dataset, batch_size: int):
         num_iters = int(np.ceil(dataset['x_test'].shape[0] / batch_size))
         while 1:
             for i in range(num_iters):
-                tmp = dataset['x_test'][i*batch_size:(i+1)*batch_size].astype('float32')
+                tmp = dataset['x_test'][i *
+                                        batch_size:(i+1)*batch_size].astype('float32')
                 tmp /= 255.0
                 yield tmp, dataset['y_test'][i*batch_size:(i+1)*batch_size]
 
-    def evaluate(self, dataset, batch_size : int = 16):
+    def evaluate(self, dataset, batch_size: int = 16):
         t_generator = self.test_generator(dataset, batch_size=batch_size)
-        iters_test = int(np.ceil(dataset['x_test'].shape[0] / float(batch_size)))
-        loss, accuracy = self.network.evaluate_generator(t_generator, steps=iters_test, verbose=2)
+        iters_test = int(
+            np.ceil(dataset['x_test'].shape[0] / float(batch_size)))
+        loss, accuracy = self.network.evaluate_generator(
+            t_generator, steps=iters_test, verbose=2)
         return loss, accuracy
 
     def loss(self):
@@ -133,8 +142,8 @@ class Model:
 
     def save_weights(self):
         self.network.save_weights(self.weights_filename)
-        print ('[INFO] Weights saved at', self.weights_filename)
+        print('[INFO] Weights guardados en', self.weights_filename)
 
     def save_model(self):
         self.network.save(self.model_filename)
-        print ('[INFO] Model saved at', self.model_filename)        
+        print('[INFO] Modelo guardado en', self.model_filename)

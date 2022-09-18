@@ -8,41 +8,41 @@ Here we experimented with 3 different architecture lenet, resnet and a custom CN
 
 **Learnings**
 
--   Initially we trained all models with a constant learning rate.
--   Instead of using constant learning rate, we implemented cyclic learning rate and learning rate finder which provided a great boost in terms of both speed and accuracy for performing various experiments.
--   Transfer learning with resnet-18 performed poorly.
--   From above results of test evaluation, we can see that model performs poorly on specific characters as there can be confusion due to similarity like digit 1 and letter l, digit 0 and letter o or O, digit 5 and letter s or S or digit 9 and letter q or Q.
--   Accuracies on train dataset are 78% on lenet, 83% on resnet and 84% on custom.
--   Accuracies on val dataset are 80% on lenet, 81% on resnet and 82% on custom.
--   Accuracies on test dataset are 62% on lenet, 36% on resnet and 66% on custom.
--   Custom architecture performs well but resnet perform poorly (Why?)
--   There is a lot of gap in train-val and test even when val distribution is same as test distribution i.e. val set is taken from 10% of test set.
--   Look for new ways to increase accuracy
+-   Inicialmente entrenamos todos los modelos con una tasa de aprendizaje constante.
+-   En lugar de usar una tasa de aprendizaje constante, implementamos una tasa de aprendizaje cíclica y un buscador de tasas de aprendizaje que proporcionaron un gran impulso en términos de velocidad y precisión para realizar varios experimentos.
+-   El aprendizaje de transferencia con resnet-18 tuvo un rendimiento deficiente.
+-   A partir de los resultados anteriores de la evaluación de la prueba, podemos ver que el modelo funciona mal en caracteres específicos, ya que puede haber confusión debido a la similitud, como el dígito 1 y la letra l, el dígito 0 y la letra o o O, el dígito 5 y la letra s o S ​​o el dígito 9 y la letra q o Q.
+-   Las precisiones en el conjunto de datos del tren son del 78 % en lenet, del 83 % en resnet y del 84 % en personalizado.
+-   Las precisiones en el conjunto de datos de val son del 80 % en lenet, 81 % en resnet y 82 % en custom.
+-   Las precisiones en el conjunto de datos de prueba son del 62 % en lenet, del 36 % en resnet y del 66 % en personalizado.
+-   La arquitectura personalizada funciona bien pero resnet funciona mal (¿Por qué?)
+-   Hay mucha brecha en el tren-val y la prueba, incluso cuando la distribución de val es la misma que la distribución de prueba, es decir, el conjunto de val se toma del 10% del conjunto de prueba.
+-   Busque nuevas formas de aumentar la precisión
 
-A short description of the project.
+Una breve descripción del proyecto.
 
 ## Project Organization
 
-    ├── README.md          <- The top-level README for developers using this project.
+    ├── README.md          <- El README de nivel superior para los desarrolladores que utilizan este proyecto.
     ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
+    │   ├── external       <- Datos de fuentes de terceros.
+    │   ├── interim        <- Datos intermedios que han sido transformados.
+    │   ├── processed      <- Los conjuntos de datos canónicos finales para el modelado.
+    │   └── raw            <- El volcado de datos original e inmutable.
     │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    ├── models             <- Modelos entrenados y serializados, predicciones de modelos o resúmenes de modelos
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    ├── notebooks          <- Cuadernos Jupyter. La convención de nomenclatura es un número (para ordenar),
+    │                         las iniciales del creador y una breve descripción delimitada por `-`, p.
+    │                         `1.0-jqp-exploración-de-datos-inicial`.
     |
     |
-    ├── src                <- Source code for use in this project.
+    ├── src                <- Codigo fuente para usar en este proyecto.
         ├── data
         │   ├── dataset.py
-        │   ├── emnist_dataset.py  <- Scripts to download or generate data
+        │   ├── emnist_dataset.py  <- Scripts para descargar o generar datos
         |
-        ├── __init__.py            <- Makes src a Python module
+        ├── __init__.py            <- Convierte src en un módulo de Python
         |
         ├── models
         │   ├── base_model.py
@@ -53,7 +53,7 @@ A short description of the project.
         │   ├── lenet.py
         │   └── resnet.py
         |
-        ├── tests                    <- Scripts to use trained models to make predictions
+        ├── tests                    <- Scripts para usar modelos climáticos para hacer predicciones
         │   ├── support
         │   │   ├── create_emnist_support_files.py
         │   │   └── emnist
@@ -63,16 +63,14 @@ A short description of the project.
         │   │       ├── e.png
         │   │       └── U.png
         │   └── test_character_predictor.py
-        ├── training                        <- Scripts to train models
+        ├── training                        <- Scripts para entrenar modelos
         │   ├── character_predictor.py
         │   ├── clr_callback.py
         │   ├── lr_find.py
         │   ├── train_model.py
         │   └── util.py
         ├── util.py
-        └── visualization       <- Scripts to create exploratory and results oriented visualizations
+        └── visualization       <- Scripts para crear visualizaciones exploratorias y orientadas a resultados
             └── visualize.py
 
 ---
-
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>

@@ -1,11 +1,12 @@
 """
-Shamelessly copied from https://github.com/bckenstler/CLR/blob/master/clr_callback.py
+copiado descaradamente de https://github.com/bckenstler/CLR/blob/master/clr_callback.py
 """
 
 #from tensorflow.keras.callbacks import *
 import keras.backend as K
 from keras.callbacks import *
 import numpy as np
+
 
 class CyclicLR(Callback):
     """This callback implements a cyclical learning rate policy (CLR).
@@ -22,14 +23,14 @@ class CyclicLR(Callback):
         A cycle that scales initial amplitude by gamma**(cycle iterations) at each 
         cycle iteration.
     For more detail, please see paper.
-    
+
     # Example
         ```python
             clr = CyclicLR(base_lr=0.001, max_lr=0.006,
                                 step_size=2000., mode='triangular')
             model.fit(X_train, Y_train, callbacks=[clr])
         ```
-    
+
     Class also supports custom scaling functions:
         ```python
             clr_fn = lambda x: 0.5*(1+np.sin(x*np.pi/2.))
@@ -106,7 +107,7 @@ class CyclicLR(Callback):
         if new_step_size != None:
             self.step_size = new_step_size
         self.clr_iterations = 0.
-        
+
     def clr(self):
         cycle = np.floor(1+self.clr_iterations/(2*self.step_size))
         x = np.abs(self.clr_iterations/self.step_size - 2*cycle + 1)
@@ -114,25 +115,26 @@ class CyclicLR(Callback):
             return self.base_lr + (self.max_lr-self.base_lr)*np.maximum(0, (1-x))*self.scale_fn(cycle)
         else:
             return self.base_lr + (self.max_lr-self.base_lr)*np.maximum(0, (1-x))*self.scale_fn(self.clr_iterations)
-        
+
     def on_train_begin(self, logs={}):
         logs = logs or {}
 
         if self.clr_iterations == 0:
             K.set_value(self.model.optimizer.lr, self.base_lr)
         else:
-            K.set_value(self.model.optimizer.lr, self.clr())        
-            
+            K.set_value(self.model.optimizer.lr, self.clr())
+
     def on_batch_end(self, epoch, logs=None):
-        
+
         logs = logs or {}
         self.trn_iterations += 1
         self.clr_iterations += 1
 
-        self.history.setdefault('lr', []).append(K.get_value(self.model.optimizer.lr))
+        self.history.setdefault('lr', []).append(
+            K.get_value(self.model.optimizer.lr))
         self.history.setdefault('iterations', []).append(self.trn_iterations)
 
         for k, v in logs.items():
             self.history.setdefault(k, []).append(v)
-        
+
         K.set_value(self.model.optimizer.lr, self.clr())

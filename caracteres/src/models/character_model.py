@@ -13,23 +13,25 @@ from src.models.base_model import Model
 from src.data.emnist_dataset import EMNIST
 from src.networks.lenet import lenet
 
+
 class Character_Model(Model):
     """
-    Character Model class
+    Caracteres Model Class
     """
+
     def __init__(self,
-                 network_fn : Callable = lenet,
-                 dataset : type = EMNIST):
-        """Define default network class and dataset class"""
+                 network_fn: Callable = lenet,
+                 dataset: type = EMNIST):
+        """Definir la clase de red predeterminada y la clase de conjunto de datos"""
         super().__init__(network_fn, dataset)
-    
+
     def predict_on_image(self, image: np.ndarray) -> Tuple[str, float]:
         if image.dtype == np.uint8:
             image = (image / 255).astype(np.float32)
-        pred_raw = self.network.predict(np.expand_dims(image, 0), batch_size=1).flatten()
+        pred_raw = self.network.predict(
+            np.expand_dims(image, 0), batch_size=1).flatten()
         ind = np.argmax(pred_raw)
         confidence_of_prediction = pred_raw[ind]
-        # integer to character mapping dictionary is self.data.mapping[integer]
+        # el diccionario de mapeo de entero a carácter es self.data.mapping[integer]
         predicted_character = self.data.mapping[ind]
-        return predicted_character, confidence_of_prediction    
-        
+        return predicted_character, confidence_of_prediction

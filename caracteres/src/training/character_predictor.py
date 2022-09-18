@@ -1,4 +1,11 @@
-"""CharacterPredictor class"""
+"""Clase CharacterPredictor"""
+import matplotlib.pyplot as plt
+import matplotlib
+import imageio
+from src.networks.custom import customCNN
+from src.networks.resnet import resnet
+from src.networks.lenet import lenet
+from src.models.character_model import Character_Model
 from typing import Tuple, Union
 
 import numpy as np
@@ -6,23 +13,18 @@ from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from src.models.character_model import Character_Model
-from src.networks.lenet import lenet
-from src.networks.resnet import resnet
-from src.networks.custom import customCNN
-import imageio
-import matplotlib
 matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
+
 
 class CharacterPredictor:
-    """Given an image of a single handwritten character, recognizes it."""
+    """Ante una imagen de un solo carácter escrito a mano, lo reconoce."""
+
     def __init__(self):
         self.model = Character_Model(customCNN)
         self.model.load_weights()
 
     def predict(self, image_or_filename: Union[np.ndarray, str]) -> Tuple[str, float]:
-        """Predict on a single image."""
+        """Predecir en una sola imagen."""
         if isinstance(image_or_filename, str):
             image = imageio.imread(image_or_filename, pilmode='L')
         else:
@@ -30,5 +32,5 @@ class CharacterPredictor:
         return self.model.predict_on_image(image)
 
     def evaluate(self, dataset):
-        """Evaluate on a dataset."""
+        """Evaluar en un conjunto de datos."""
         return self.model.evaluate(dataset.x_test, dataset.y_test)

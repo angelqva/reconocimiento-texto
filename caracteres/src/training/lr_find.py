@@ -1,5 +1,3 @@
-#from tensorflow.keras.callbacks import LambdaCallback
-#import tensorflow as tf
 from keras.callbacks import LambdaCallback
 from keras import backend as K
 import matplotlib.pyplot as plt
@@ -7,21 +5,22 @@ import numpy as np
 import tempfile
 SAVE_LR_PLOT = '../models/'
 
+
 class LearningRateFinder:
     def __init__(self, model, stopFactor=4, beta=0.98):
-        # store the model, stop factor, and beta value (for computing
-        # a smoothed, average loss)
+        # almacenar el modelo, el factor de parada y el valor beta (para calcular
+        # una pérdida media suavizada)
         self.model = model
         self.stopFactor = stopFactor
         self.beta = beta
 
-        # initialize our list of learning rates and losses,
-        # respectively
+        # inicializar nuestra lista de tasas de aprendizaje y pérdidas,
+        # respectivamente
         self.lrs = []
         self.losses = []
 
-        # initialize our learning rate multiplier, average loss, best
-        # loss found thus far, current batch number, and weights file
+        # inicializar nuestro multiplicador de tasa de aprendizaje, pérdida promedio, mejor
+        # pérdida encontrada hasta el momento, número de lote actual y archivo de pesos
         self.lrMult = 1
         self.avgLoss = 0
         self.bestLoss = 1e9
@@ -29,7 +28,7 @@ class LearningRateFinder:
         self.weightsFile = None
 
     def reset(self):
-        # re-initialize all variables from our constructor
+        # reinicia todas las variables de nuestro constructor(masculino)
         self.lrs = []
         self.losses = []
         self.lrMult = 1
@@ -39,83 +38,82 @@ class LearningRateFinder:
         self.weightsFile = None
 
     def on_batch_end(self, batch, logs):
-        # grab the current learning rate and add log it to the list of
-        # learning rates that we've tried
+        # tome la tasa de aprendizaje actual y agréguela a la lista de
+        # tasas de aprendizaje que hemos probado
         lr = K.get_value(self.model.network.optimizer.lr)
         self.lrs.append(lr)
 
-        # grab the loss at the end of this batch, increment the total
-        # number of batches processed, compute the average average
-        # loss, smooth it, and update the losses list with the
-        # smoothed value
+        # tomar la pérdida al final de este lote, incrementar el total
+        # número de lotes procesados, calcule el promedio promedio
+        # pérdida, suavizarla y actualizar la lista de pérdidas con el
+        # valor suavizado
         l = logs["loss"]
         self.batchNum += 1
         self.avgLoss = (self.beta * self.avgLoss) + ((1 - self.beta) * l)
         smooth = self.avgLoss / (1 - (self.beta ** self.batchNum))
         self.losses.append(smooth)
 
-        # compute the maximum loss stopping factor value
+        # calcular el valor del factor de parada de pérdida máxima
         stopLoss = self.stopFactor * self.bestLoss
 
-        # check to see whether the loss has grown too large
+        # verificar para ver si la pérdida ha crecido demasiado
         if self.batchNum > 1 and smooth > stopLoss:
             # stop returning and return from the method
             self.model.network.stop_training = True
             return
 
-        # check to see if the best loss should be updated
+        # verificar para ver si la mejor pérdida debe actualizarse
         if self.batchNum == 1 or smooth < self.bestLoss:
             self.bestLoss = smooth
 
-        # increase the learning rate
+        # aumentar la tasa de aprendizaje
         lr *= self.lrMult
         K.set_value(self.model.network.optimizer.lr, lr)
 
     def find(self, dataset, startLR, endLR, epochs=None,
              stepsPerEpoch=None, batchSize=32, sampleSize=2048):
-        # reset our class-specific variables
+        # restablecer nuestras variables específicas de clase
         self.reset()
 
-        # if no number of training epochs are supplied, compute the
-        # training epochs based on a default sample size
+        # si no se proporciona un número de épocas de entrenamiento, calcule el
+        # épocas de entrenamiento basadas en un tamaño de muestra predeterminado
         if epochs is None:
             epochs = int(np.ceil(sampleSize / float(stepsPerEpoch)))
 
-        # compute the total number of batch updates that will take
-        # place while we are attempting to find a good starting
-        # learning rate
+        # calcule el número total de actualizaciones por lotes que tomarán
+        # lugar mientras intentamos encontrar un buen comienzo
+        # tasa de aprendizaje
         numBatchUpdates = epochs * stepsPerEpoch
 
-        # derive the learning rate multiplier based on the ending
-        # learning rate, starting learning rate, and total number of
-        # batch updates
+        # derivar el multiplicador de tasa de aprendizaje basado en el final
+        # tasa de aprendizaje, tasa de aprendizaje inicial y número total de
+        # actualizaciones por lotes
         self.lrMult = (endLR / startLR) ** (1.0 / numBatchUpdates)
 
-        # construct a callback that will be called at the end of each
-        # batch, enabling us to increase our learning rate as training
-        # progresses
-        callback = LambdaCallback(on_batch_end=lambda batch, logs: self.on_batch_end(batch, logs))
+        # construir una devolución de llamada que se llamará al final de cada
+        # lote, lo que nos permite aumentar nuestra tasa de aprendizaje como entrenamiento
+        # progresa
+        callback = LambdaCallback(
+            on_batch_end=lambda batch, logs: self.on_batch_end(batch, logs))
 
         _ = self.model.fit(dataset=dataset,
-                        batch_size=batchSize,
-                        epochs=epochs,
-                        callbacks=[callback],
-                        lr=startLR)
-
+                           batch_size=batchSize,
+                           epochs=epochs,
+                           callbacks=[callback],
+                           lr=startLR)
 
     def plot_loss(self, name, skipBegin=10, skipEnd=1, title=""):
-        # grab the learning rate and losses values to plot
+        # tomar la tasa de aprendizaje y los valores de pérdidas para graficar
         lrs = self.lrs[skipBegin:-skipEnd]
         losses = self.losses[skipBegin:-skipEnd]
 
-        # plot the learning rate vs. loss
+        # trazar la tasa de aprendizaje frente a la pérdida
         plt.plot(lrs, losses)
         plt.xscale("log")
         plt.xlabel("Learning Rate (Log Scale)")
         plt.ylabel("Loss")
 
-        # if the title is not empty, add it to the plot
+        # si el título no está vacío, agréguelo a la trama
         if title != "":
             plt.title(title)
         plt.savefig(SAVE_LR_PLOT + str(name) + '_lr.png')
-
