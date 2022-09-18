@@ -2,10 +2,10 @@
 import matplotlib.pyplot as plt
 import matplotlib
 import imageio
-from src.networks.custom import customCNN
-from src.networks.resnet import resnet
-from src.networks.lenet import lenet
-from src.models.character_model import Character_Model
+from caracteres.src.networks.custom import customCNN
+from caracteres.src.networks.resnet import resnet
+from caracteres.src.networks.lenet import lenet
+from caracteres.src.models.character_model import Character_Model
 from typing import Tuple, Union
 
 import numpy as np

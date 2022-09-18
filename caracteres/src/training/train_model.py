@@ -3,16 +3,18 @@ Train model
 """
 
 from __future__ import absolute_import
-import argparse
-from src.networks.custom import customCNN
-from src.networks.resnet import resnet
-from src.networks.lenet import lenet
-from src.models.character_model import Character_Model
-from src.data.emnist_dataset import EMNIST
-from src.training.util import train_model
-from sklearn.model_selection import train_test_split
 from __future__ import division
 from __future__ import print_function
+
+import argparse
+from caracteres.src.networks.custom import customCNN
+from caracteres.src.networks.resnet import resnet
+from caracteres.src.networks.lenet import lenet
+from caracteres.src.models.character_model import Character_Model
+from caracteres.src.data.emnist_dataset import EMNIST
+from caracteres.src.training.util import train_model
+from sklearn.model_selection import train_test_split
+
 from comet_ml import Experiment
 
 from pathlib import Path

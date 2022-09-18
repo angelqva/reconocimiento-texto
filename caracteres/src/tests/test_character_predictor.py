@@ -1,5 +1,5 @@
 """Pruebas para la clase CharacterPredictor."""
-from src.training.character_predictor import CharacterPredictor
+from caracteres.src.training.character_predictor import CharacterPredictor
 import os
 from pathlib import Path
 import unittest

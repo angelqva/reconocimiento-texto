@@ -3,7 +3,7 @@ from keras import backend as K
 import matplotlib.pyplot as plt
 import numpy as np
 import tempfile
-SAVE_LR_PLOT = '../models/'
+SAVE_LR_PLOT = 'caracteres/models/'
 
 
 class LearningRateFinder:

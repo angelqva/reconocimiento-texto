@@ -1,12 +1,9 @@
-"""
-Conjunto de datos EMNIST. Se descarga desde el sitio web de NIST y se guarda como archivo .npz si aún no está presente.
-"""
-
 from __future__ import absolute_import
-from src import util
 from src.data.dataset import Dataset
 from __future__ import division
 from __future__ import print_function
+from caracteres.src import util
+
 
 from urllib.request import urlretrieve
 import zipfile

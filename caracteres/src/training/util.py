@@ -1,18 +1,19 @@
 """Function to train a model."""
 
 from __future__ import absolute_import
-import matplotlib.pyplot as plt
-from src.training.lr_find import LearningRateFinder
-from src.training.clr_callback import CyclicLR
-from src.visualization.visualize import plot_loss, plot_acc, save_model
 from __future__ import division
 from __future__ import print_function
+import matplotlib.pyplot as plt
+from caracteres.src.training.lr_find import LearningRateFinder
+from caracteres.src.training.clr_callback import CyclicLR
+from caracteres.src.visualization.visualize import plot_loss, plot_acc, save_model
+
 
 import time
 
 from keras.callbacks import EarlyStopping
-from src.data.dataset import Dataset
-from src.models.base_model import Model
+from caracteres.src.data.dataset import Dataset
+from caracteres.src.models.base_model import Model
 from pathlib import Path
 import numpy as np
 import sys

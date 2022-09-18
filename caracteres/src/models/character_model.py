@@ -9,9 +9,9 @@ from __future__ import print_function
 import numpy as np
 from pathlib import Path
 from typing import Callable, Dict, Optional, Tuple
-from src.models.base_model import Model
-from src.data.emnist_dataset import EMNIST
-from src.networks.lenet import lenet
+from caracteres.src.models.base_model import Model
+from caracteres.src.data.emnist_dataset import EMNIST
+from caracteres.src.networks.lenet import lenet
 
 
 class Character_Model(Model):

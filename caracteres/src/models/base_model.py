@@ -3,11 +3,12 @@ Base Model class
 """
 
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from keras.optimizers import RMSprop
 from typing import Callable, Dict, Optional, Tuple
 from pathlib import Path
-from __future__ import division
-from __future__ import print_function
+
 import os
 import errno
 import numpy as np
