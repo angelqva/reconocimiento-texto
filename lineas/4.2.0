@@ -1,0 +1,12 @@
+Collecting nbformat
+  Using cached nbformat-5.5.0-py3-none-any.whl (75 kB)
+Requirement already satisfied: jupyter_core in c:\users\angel\documents\github\reconocimiento-texto\lineas\venv\lib\site-packages (from nbformat) (4.11.1)
+Requirement already satisfied: jsonschema>=2.6 in c:\users\angel\documents\github\reconocimiento-texto\lineas\venv\lib\site-packages (from nbformat) (4.16.0)
+Requirement already satisfied: traitlets>=5.1 in c:\users\angel\documents\github\reconocimiento-texto\lineas\venv\lib\site-packages (from nbformat) (5.4.0)
+Collecting fastjsonschema
+  Using cached fastjsonschema-2.16.2-py3-none-any.whl (22 kB)
+Requirement already satisfied: attrs>=17.4.0 in c:\users\angel\documents\github\reconocimiento-texto\lineas\venv\lib\site-packages (from jsonschema>=2.6->nbformat) (22.1.0)
+Requirement already satisfied: pyrsistent!=0.17.0,!=0.17.1,!=0.17.2,>=0.14.0 in c:\users\angel\documents\github\reconocimiento-texto\lineas\venv\lib\site-packages (from jsonschema>=2.6->nbformat) (0.18.1)
+Requirement already satisfied: pywin32>=1.0 in c:\users\angel\documents\github\reconocimiento-texto\lineas\venv\lib\site-packages (from jupyter_core->nbformat) (304)
+Installing collected packages: fastjsonschema, nbformat
+Successfully installed fastjsonschema-2.16.2 nbformat-5.5.0
